@@ -1,0 +1,77 @@
+doctype html
+html
+    head
+        title 커그 길드원 등록 확인 페이지
+        link(href='http://api.mobilis.co.kr/webfonts/v2/css/NanumGothicWeb', rel='stylesheet', type='text/css')
+        //- lib stylesheet
+        link(rel='stylesheet', href='/lib/bootstrap/bootstrap.min.css')
+        link(rel='stylesheet', href='/lib/ng-table.min.css')
+        link(rel='stylesheet', href='/lib/nvd3/nv.d3.min.css')
+        //- user stylesheet
+        link(rel='stylesheet', href='/css/style.css')
+        //- lib javascripts
+        script(src="/lib/jquery-1.10.2.min.js")
+        script(src="/lib/underscore-min.js")
+        script(src="/lib/angluar/angular.min.js")
+        script(src="/lib/angluar/angular-route.min.js")
+        script(src="/lib/angluar/angular-resource.min.js")
+        script(src="/lib/ui-bootstrap-tpls-0.10.0.min.js")
+        script(src="/lib/ng-table.min.js")
+        script(src="/lib/date.format.js")
+        script(src="http://d3js.org/d3.v3.min.js", charset="utf-8")
+        script(src="/lib/nvd3/nv.d3.min.js")
+        //- user javascripts
+        script(src="/js/my_table.js")
+        script(src="/js/df_today.js")
+    body
+        #header
+            .navbar.navbar-inverse(ng-controller="NavbarCtrl")
+                .navbar-header
+                    a.navbar-brand(href="#") 커그 길드원 등록 확인 페이지
+                .collapse.navbar-collapse
+                    .nav.navbar-nav.navbar-right
+                        p.navbar-text {{version}}
+                        p.navbar-text  
+
+        #container(ng-controller="TodayListCtrl")
+            .container
+                .graph.col-md-6
+                    h3
+                        b 진고던 통계 
+                        small (수집: {{firstDay}} ~ {{lastDay}})
+                    #chart_dg: svg(style="height:180px")
+                .graph.col-md-6
+                    h3
+                        b 등급 통계 
+                        small (수집: {{firstDay}} ~ {{lastDay}})
+                    #chart_rt: svg(style="height:180px")
+                hr
+                form.form-inline(role="form")
+                    .form-group
+                        label.sr-only(for="") Date
+                        input.form-control(type="text", datepicker-popup="yyyy-MM-dd",
+                                            ng-model="dt", is-open="opened",
+                                            datepicker-options="dateOptions",
+                                            ng-required="true" close-text="Close", placeholder="일자")
+                        //- span.input-group-btn
+                        //-     button.btn.btn-default(ng-click="open($event)")
+                        //-         i.glyphicon.glyphicon-calendar
+                    .form-group
+                        label.sr-only(for="") Dungeon
+                        input.form-control(type="text", ng-model="dungeon", placeholder="진고던")
+                    .form-group
+                        label.sr-only(for="") Rank
+                        input.form-control(type="text", ng-model="rating", placeholder="등급")
+                    button.btn.btn-default(type="submit", ng-click="createRow(dt, dungeon, rating)") 추가
+                    button.btn.btn-default(type="submit", ng-click="updateRow(dt, dungeon, rating)") 수정
+                form.form-inline(role="form")
+                    .form-group.pull-right
+                        input.form-control(type="text", ng-model="filterText", placeholder="검색...")
+                    button.btn.btn-default.pull-right(ng-click="getData()") 갱신
+                .totalInfo
+                my-table(rows="rows", cols="column", config="config", filter="filterText")
+
+                .spinner(ng-show="loading")
+                    img.ajax-loader(src="/img/ajax-loader.gif")
+
+        #footer

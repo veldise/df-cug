@@ -1,0 +1,19 @@
+.my-table-warpper
+    table.table(ng-table="tableParams")
+        thead
+            tr
+                th(width="30", style="text-align: left", ng-show="config.selectionCheckbox")
+                    input(type="checkbox", ng-click="toggleAll()", ng-checked="isAllSelected()")
+                th(ng-repeat="col in cols", ng-hide="col.hide", ng-click="tableParams.sorting(col.field, tableParams.isSortBy(col.field, 'asc') ? 'desc' : 'asc')")
+                    span(ng-class="{ 'sort-ascent': tableParams.isSortBy(col.field, 'asc'), 'sort-descent': tableParams.isSortBy(col.field, 'desc') }")
+                        | {{col.title}}
+        tbody
+            tr(ng-repeat="(rIndex, row) in $data", ng-class="{{config.ngClassRow}}")
+                td(width="30", style="text-align: left", ng-show="config.selectionCheckbox")
+                    input(type="checkbox", ng-click="toggle(rIndex, row)", ng-checked="row.isSelected")
+                td(my-table-td, ng-repeat="(cIndex, col) in cols", ng-hide="col.hide",
+                    sortable="col.field", ng-click="toggle(rIndex, row, cIndex, row[col.field])", ng-class="{{col.ngClass}}")
+                    | {{row[col.field]}}
+                    //- {{value}}
+                    //- span(ng-if="!row.$edit", ng-click="row.$edit=true"): {{row[col.field]}}
+                    //- div(ng-if="row.$edit", ng-enter="row.$edit=false"): input.form-control(type="text", ng-model="row[col.field]")
