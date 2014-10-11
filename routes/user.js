@@ -1,9 +1,8 @@
-
+'use strict';
 /*
  * GET users listing.
  */
-var path = require('path'),
-    exec = require('child_process').exec;
+var exec = require('child_process').exec;
 
 exports.list = function (req, res) {
     var postno = req.params.postno,
@@ -25,7 +24,7 @@ exports.list = function (req, res) {
 };
 
 exports.version = function (req, res) {
-    exec('git describe --tag', function (err, stdout, stderr) {
+    exec('git describe --tag', function (err, stdout) {
         if (err) {
             return res.send(404, err);
         }
@@ -39,10 +38,13 @@ var request = require('request'),
     jsdom = require('jsdom'),
     Iconv = require('iconv').Iconv,
     iconv = new Iconv('EUC-KR', 'UTF-8//TRANSLIT//IGNORE'),
-    _ = require('underscore')
+    _ = require('underscore');
 
 function requestComments (no, callback) {
-    request({ url: 'http://www.fancug.com/bbs/view.php?id=dnf&no=' + no, encoding: 'binary' }, function (err, response, body) {
+    request({
+        url: 'http://www.fancug.com/bbs/view.php?id=dnf&no=' + no,
+        encoding: 'binary'
+    }, function (err, response, body) {
         if (err && response.statusCode !== 200) {
             callback(err || 'Request error.');
         }
@@ -95,7 +97,7 @@ function requestComments (no, callback) {
 * 일반길드원: xx 명
 */
 
-function parseList (names, comments, seps, callback) {
+function parseList (names, comments, seps) {
     var matchupList = [];
     var memberInfoList = [];
     var sumInfo = {

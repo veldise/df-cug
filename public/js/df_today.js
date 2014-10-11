@@ -1,3 +1,5 @@
+'use strict';
+
 var dnfTodayApp = angular.module('dnfTodayApp', [
 	'ngRoute', 'ngResource',
 	'ui.bootstrap', 'myTable'

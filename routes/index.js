@@ -11,12 +11,3 @@ exports.index = function(req, res){
 exports.table = function(req, res){
     res.render('my_table');
 };
-
-exports.template = function (req, res) {
-    if (req.url.indexOf('..') !== -1) {
-        res.status(404).send('error');
-        return;
-    }
-
-    res.sendfile(path.join(rootpath, req.url));
-};
