@@ -1,0 +1,127 @@
+/*@font-face{
+	font-family: 'NanumGothic'
+	src: url('/font/NanumGothic.eot')
+	src: local(※), url('/font/NanumGothic.woff') format('woff')
+}*/
+@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css)
+
+body
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif
+
+a
+  color: #00B7FF
+
+span.total
+	margin: 0px 20px 20px 0px
+	font-weight: bold
+	font-size: medium
+
+.control, .totalInfo
+	margin: 16px 0px 16px 10px
+
+.search-box
+    padding: 10px 0 10px 0
+
+#header
+	font-family : 'Nanum Gothic'
+
+.spinner  
+    position:absolute
+    top:0
+    left:0
+    width:100%
+    height:100%
+    z-index:1000
+    opacity: .8
+ 
+
+.ajax-loader
+    position: absolute
+    left: 50%
+    top: 254px
+    margin-left: -32px; /* -1 * image width / 2 */
+    margin-top: -32px;  /* -1 * image height / 2 */
+    width: 32px
+    height: 32px
+    display: block;     
+
+/* app css stylesheet */
+
+.menu
+    list-style: none
+    border-bottom: 0.1em solid black
+    margin-bottom: 2em
+    padding: 0 0 0.5em
+
+.menu:before
+    content: "["
+
+.menu:after
+    content: "]"
+
+.menu > li
+    display: inline
+
+.menu > li:before
+    content: "|"
+    padding-right: 0.3em
+
+.menu > li:nth-child(1):before
+    content: ""
+    padding: 0
+
+.header-content:before
+    content: ' '
+    position: relative
+    left: -5px
+
+.sort-ascent:before
+    content: "\25B4"
+
+.sort-descent:before
+    content: "\25BE"
+
+/**
+*   Tabset
+*/
+.tab-content
+    border-left: 1px solid #ddd
+    border-right: 1px solid #ddd
+    border-bottom: 1px solid #ddd
+    padding: 12px
+
+/**
+*   Table
+*/
+.ng-table-pager
+    margin-left:auto
+    margin-right:auto
+    width:430px
+
+.ng-table
+    border: 1px solid #ddd
+
+.table tbody > tr > td
+    border: 1px solid #ddd
+.table thead > tr > th
+    position:relative
+    background:#eff0f4
+    border: 1px solid #ddd
+    cursor: pointer
+
+.pagination
+    margin-top:30px;text-align:center
+    ul
+        display:inline-block
+    li
+        display:inline-block
+        a
+            display:block;padding:7px 10px;color:#717171
+        &:hover a
+            color:#00b4ca
+    li.active
+        a
+            background:#eff0f4
+
+.nav-tabs > li
+    cursor: pointer

@@ -1,0 +1,49 @@
+doctype html
+html
+    head
+        title 커그 길드원 등록 확인 페이지
+        link(href='http://api.mobilis.co.kr/webfonts/v2/css/NanumGothicWeb', rel='stylesheet', type='text/css')
+        //- lib stylesheet
+        link(rel='stylesheet', href='/lib/bootstrap/bootstrap.min.css')
+        link(rel='stylesheet', href='/lib/ng-table.min.css')
+        //- user stylesheet
+        link(rel='stylesheet', href='/css/style.css')
+        //- lib javascripts
+        script(src="/lib/jquery-1.10.2.min.js")
+        script(src="/lib/underscore-min.js")
+        script(src="/lib/angluar/angular.min.js")
+        script(src="/lib/angluar/angular-route.min.js")
+        script(src="/lib/angluar/angular-resource.min.js")
+        script(src="/lib/ui-bootstrap-tpls-0.10.0.min.js")
+        script(src="/lib/ng-table.min.js")
+        //- user javascripts
+        script(src="/js/my_table.js")
+        script(src="/js/df_today.js")
+    body
+        #header
+            .navbar.navbar-inverse(ng-controller="NavbarCtrl")
+                .navbar-header
+                    a.navbar-brand(href="#") 커그 길드원 등록 확인 페이지
+                .collapse.navbar-collapse
+                    .nav.navbar-nav.navbar-right
+                        p.navbar-text {{version}}
+                        p.navbar-text  
+
+        #container(ng-controller="TodayListCtrl")
+            .container
+                form.form-inline(role="form")
+                    .form-group
+                        //- input.char(type="text", ng-model="sep", placeholder="분리 문자")#_txt_splitch
+                        input.form-control(type="text", ng-model="time", placeholder="일자")#_txt_postno
+                        input.form-control(type="text", ng-model="dungeon", placeholder="진고던")#_txt_postno
+                        input.form-control(type="text", ng-model="rating", placeholder="등급")#_txt_postno
+                    button.btn.btn-default(type="submit", ng-click="createRow(time, dungeon, rating)") 추가
+                    button.btn.btn-default(type="submit", ng-click="updateRow(time, dungeon, rating)") 수정
+
+                button.btn.btn-default(type="submit", ng-click="getData()") 갱신
+                my-table(rows="rows", cols="column", config="config", filter="filterText")
+
+                .spinner(ng-show="loading")
+                    img.ajax-loader(src="/img/ajax-loader.gif")
+
+        #footer

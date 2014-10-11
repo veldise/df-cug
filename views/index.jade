@@ -1,0 +1,84 @@
+doctype html
+html
+    head
+        title 커그 길드원 등록 확인 페이지
+        link(href='http://api.mobilis.co.kr/webfonts/v2/css/NanumGothicWeb', rel='stylesheet', type='text/css')
+        //- lib stylesheet
+        link(rel='stylesheet', href='/lib/bootstrap/bootstrap.min.css')
+        link(rel='stylesheet', href='/lib/ng-table.min.css')
+        //- user stylesheet
+        link(rel='stylesheet', href='/css/style.css')
+        //- lib javascripts
+        script(src="/lib/jquery-1.10.2.min.js")
+        script(src="/lib/underscore-min.js")
+        script(src="/lib/angluar/angular.min.js")
+        script(src="/lib/angluar/angular-route.min.js")
+        script(src="/lib/angluar/angular-cookies.min.js")
+        script(src="/lib/ui-bootstrap-tpls-0.10.0.min.js")
+        script(src="/lib/ng-table.min.js")
+        //- user javascripts
+        script(src="/js/my_table.min.js")
+        script(src="/js/index.js")
+    body
+        #header
+            .navbar.navbar-inverse(ng-controller="NavbarCtrl")
+                .navbar-header
+                    a.navbar-brand(href="#") 커그 길드원 등록 확인 페이지
+                .collapse.navbar-collapse
+                    .nav.navbar-nav.navbar-right
+                        p.navbar-text {{version}}
+                        p.navbar-text  
+
+        #container(ng-controller="MemberListCtrl")
+            .container
+                form.form-inline(role="form")
+                    .form-group
+                        //- input.char(type="text", ng-model="sep", placeholder="분리 문자")#_txt_splitch
+                        label.sr-only(for="_txt_postno") 글번호: 
+                        input.form-control(type="text", ng-model="postno", placeholder="글번호")#_txt_postno
+                    button.btn.btn-default(type="submit", ng-click="reqData()") 가져오기
+                    a.btn.btn-default(href="http://www.fancug.com/bbs/view.php?id=dnf&no={{postno}}", target="_blank") 찾아가기
+
+                .totalInfo
+                    span.total 길마: {{total.master}} 명
+                    span.total 부길마: {{total.sub_master}} 명
+                    span.total 우수: {{total.ex_member}} 명
+                    span.total 일반: {{total.gen_member}} 명
+                    span.total 총원: {{total.master + total.sub_master + total.ex_member + total.gen_member}} 명
+
+                tabset
+                    tab(heading="캐릭터명-커그닉({{rowMatchup.length}})")
+                        form.form-inline(role="form").search-box
+                            .form-group
+                                input.form-control(type="text", ng-model="filterMatchup", placeholder="검색...")
+                        my-table(rows="rowMatchup", cols="columnMatchup", config="globalConfig", filter="filterMatchup")
+                            //- (table-title="matchup", columns="columnMatchup", rows="rowMatchup", config="globalConfig")
+                            tr(ng-repeat="row in rowMatchup")
+                                td(data-table="'charName'") {{row.charName}}
+                                td(data-table="'커그닉'") {{row.cugName}}
+                    tab(heading="길드원 목록({{rowMembers.length}})")
+                        form.form-inline(role="form").search-box
+                            .form-group
+                                input.form-control(type="text", ng-model="filterMembers", placeholder="검색...")
+                        my-table(rows="rowMembers", cols="columnMembers", config="globalConfig", filter="filterMembers")
+                            //- (table-title="members", columns="columnMembers", rows="rowMembers", config="globalConfig")
+                            tr(ng-repeat="row in rowMembers")
+                                td(data-table="'작성자'") {{row.writer}}
+                                td(data-table="'커그닉'") {{row.cugName}}
+                                td(data-table="'캐릭터명'") {{row.chars}}
+                                td(data-table="'캐릭터 수'") {{row.charLen}}
+                                td(data-table="'등급'") {{row.rank}}
+                    tab(heading="분석 실패({{rowWrongs.length}})")
+                        form.form-inline(role="form").search-box
+                            .form-group
+                                input.form-control(type="text", ng-model="filterWrongs", placeholder="검색...")
+                        my-table(rows="rowWrongs", cols="columnWrongs", config="globalConfig", filter="filterWrongs")
+                            //- (table-title="wrongs", columns="columnWrongs", rows="rowWrongs", config="globalConfig")
+                            tr(ng-repeat="row in rowWrongs")
+                                td(data-table="'작성자'") {{row.writer}}
+                                td(data-table="'댓글'") {{row.comments}}
+
+                .spinner(ng-show="loading")
+                    img.ajax-loader(src="/img/ajax-loader.gif")
+
+        #footer
