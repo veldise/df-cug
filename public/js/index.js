@@ -20,7 +20,7 @@
     }])
     .controller('MemberListCtrl', ['$scope', '$http', '$location', '$cookies', function ($scope, $http, $location, $cookies) {
         $scope.sep = '/';
-        $scope.postno = $location.search().postno || $cookies.postno || 47961;
+        $scope.postno = $location.search().postno || $cookies.postno || 250129;
 
         $scope.globalConfig = {
             itemsByPage: 10

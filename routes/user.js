@@ -13,14 +13,45 @@ exports.list = function (req, res) {
         return;
     }
 
-    requestComments(postno, function (err, names, comments) {
-        if (err) {
-            res.status(400).send(err);
-            return;
-        }
+    var sumNames = [],
+        sumComments = [],
+        currPage = 1,
+        recvLen = 0;
 
-        res.send(parseList(names, comments, seps));
-    });
+    async.doWhilst(
+        function (cb) {
+            requestComments(postno, currPage++, function (err, names, comments) {
+                if (err) {
+                    cb(err);
+                }
+                recvLen = comments.length;
+                sumNames = sumNames.concat(names);
+                sumComments = sumComments.concat(comments);
+
+                cb();
+            });
+        },
+        function () {
+            return recvLen === 100;
+        },
+        function (err) {
+            if (err) {
+                res.status(500).send(err);
+                return;
+            }
+
+            res.send(parseList(sumNames, sumComments, seps));
+        }
+    );
+
+    // requestComments(postno, function (err, names, comments) {
+    //     if (err) {
+    //         res.status(400).send(err);
+    //         return;
+    //     }
+
+    //     res.send(parseList(names, comments, seps));
+    // });
 };
 
 exports.version = function (req, res) {
@@ -34,29 +65,30 @@ exports.version = function (req, res) {
 
 ////////////////////////////// functions //////////////////////////////
 
-var request = require('request'),
+var fs = require('fs'),
+    path = require('path'),
+    request = require('request'),
     jsdom = require('jsdom'),
-    Iconv = require('iconv').Iconv,
-    iconv = new Iconv('EUC-KR', 'UTF-8//TRANSLIT//IGNORE'),
+    async = require('async'),
     _ = require('underscore');
 
-function requestComments (no, callback) {
+var jquery = fs.readFileSync(path.join(__dirname, '../public/lib/jquery/jquery-1.11.1.min.js'), 'utf-8');
+
+function requestComments (no, page, callback) {
     request({
-        url: 'http://www.fancug.com/bbs/view.php?id=dnf&no=' + no,
-        encoding: 'binary'
+        url: 'http://www.fancug.com/bbs/board.php?bo_table=dnf&wr_id=' + no + '&c_page=' + page,
+        // encoding: 'binary'
     }, function (err, response, body) {
         if (err && response.statusCode !== 200) {
             callback(err || 'Request error.');
         }
 
-        var buf = new Buffer(body.length);
-        buf.write(body, 0, body.length, 'binary');
-
-        var newBody = iconv.convert(buf).toString('utf8');
+        // console.log(body);
+        // body = body.slice(body.indexOf('<section class="post-comment">'));
 
         jsdom.env({
-            html: newBody,
-            scripts: [ 'http://code.jquery.com/jquery.js' ],
+            html: body,
+            src: [ jquery ],
             done: function (errors, window) {
                 if (errors) {
                     console.error(errors);
@@ -64,19 +96,29 @@ function requestComments (no, callback) {
                 }
 
                 var $ = window.$;
-                var $cmt = $('table.bbs_list').eq(1);
 
-                var $info2 = $cmt.find('td.view_info2 > .view_name > b > span:first-child');
-                var $comment = $cmt.find('td.view_comment');
+                // var $postComment = $('.post-comment'),
+                //     $postCommentContent = $postComment.children('.post-comment-content'),
+                //     $postCommentView = $postCommentContent.children('.post-comment-view'),
+                //     $mediaBody = $postCommentView.children('.media-body');
 
-                var names = _.map($info2, function (el) {
-                    return $(el).text().trim();
+                var $comments = $('section.post-comment').children('.post-comment-content');
+
+                var comments = _.map($comments, function (el) {
+                    var $el = $(el),
+                        $author = $el.find('.author'),
+                        $comment = $el.find('.media-body');
+                    $comment.children('textarea').remove();
+
+                    return {
+                        name: $author.text().trim(),
+                        comment: $comment.text().trim()
+                            .split('\t').join('')
+                            .split('\n').join('')
+                    };
                 });
-                var comments = _.map($comment, function (el) {
-                    return $(el).text();
-                });
 
-                callback(null, names, comments);
+                callback(null, _.pluck(comments, 'name'), _.pluck(comments, 'comment'));
             }
         });
     });

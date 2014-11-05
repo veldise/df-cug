@@ -8,10 +8,10 @@
   "dependencies": {
     "express": "*",
     "express-uglify": "^0.3.1",
-    "iconv": "^2.1.4",
     "jade": "*",
     "jsdom": "^1.0.1",
     "request": "*",
-    "underscore": "*"
+    "underscore": "*",
+    "async": "*"
   }
 }
