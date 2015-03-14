@@ -106,7 +106,7 @@ function requestComments (no, page, callback) {
 
                 var comments = _.map($comments, function (el) {
                     var $el = $(el),
-                        $author = $el.find('.author'),
+                        $author = $el.find('.sv_member'),
                         $comment = $el.find('.media-body');
                     $comment.children('textarea').remove();
 
